@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIA Dashboard - Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/recharts@2.8.0/umd/Recharts.js"></script>
+    <style>
+        /* Paleta neon-city personalizada */
+        :root {
+            --bg-primary: linear-gradient(135deg, #0B1D2A 0%, #0E2740 100%);
+            --bg-secondary: #1A2332;
+            --bg-surface: #243447;
+            --accent-orange: linear-gradient(135deg, #FF8A00 0%, #FFC107 100%);
+            --accent-magenta: linear-gradient(135deg, #FF2D9D 0%, #FF6BD6 100%);
+            --accent-cyan: #00E5FF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0BEC5;
+        }
+        
+        body {
+            background: var(--bg-primary);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+        }
+        
+        .gradient-orange {
+            background: var(--accent-orange);
+        }
+        
+        .gradient-magenta {
+            background: var(--accent-magenta);
+        }
+        
+        .surface {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+        
+        .kpi-card {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+        
+        .trend-up {
+            color: #4CAF50;
+        }
+        
+        .trend-down {
+            color: #F44336;
+        }
+        
+        .api-status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .api-status.connected {
+            background-color: #4CAF50;
+        }
+        
+        .api-status.disconnected {
+            background-color: #F44336;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="surface m-4 p-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold">DIA Dashboard</h1>
+                <span class="ml-4 text-sm text-gray-400">v1.0.0</span>
+            </div>
+            <div class="flex items-center">
+                <span class="api-status" id="apiStatus"></span>
+                <span class="text-sm" id="apiStatusText">Conectando...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- KPIs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 m-4">
+        <!-- KPI 1: Liderazgo -->
+        <div class="kpi-card">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-400">Liderazgo</h3>
+                <span class="trend-up text-sm">↗ +2.3%</span>
+            </div>
+            <div class="text-3xl font-bold mb-1">78.5%</div>
+            <div class="text-sm text-gray-400">Promedio Nacional</div>
+            <div class="mt-3 h-2 bg-gray-700 rounded-full">
+                <div class="h-2 gradient-orange rounded-full" style="width: 78.5%"></div>
+            </div>
+        </div>
+
+        <!-- KPI 2: Gestión Pedagógica -->
+        <div class="kpi-card">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-400">Gestión Pedagógica</h3>
+                <span class="trend-up text-sm">↗ +1.8%</span>
+            </div>
+            <div class="text-3xl font-bold mb-1">82.1%</div>
+            <div class="text-sm text-gray-400">Promedio Nacional</div>
+            <div class="mt-3 h-2 bg-gray-700 rounded-full">
+                <div class="h-2 gradient-magenta rounded-full" style="width: 82.1%"></div>
+            </div>
+        </div>
+
+        <!-- KPI 3: Convivencia -->
+        <div class="kpi-card">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-400">Convivencia</h3>
+                <span class="trend-down text-sm">↘ -0.5%</span>
+            </div>
+            <div class="text-3xl font-bold mb-1">75.8%</div>
+            <div class="text-sm text-gray-400">Promedio Nacional</div>
+            <div class="mt-3 h-2 bg-gray-700 rounded-full">
+                <div class="h-2 gradient-orange rounded-full" style="width: 75.8%"></div>
+            </div>
+        </div>
+
+        <!-- KPI 4: Resultados -->
+        <div class="kpi-card">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-400">Resultados</h3>
+                <span class="trend-up text-sm">↗ +3.2%</span>
+            </div>
+            <div class="text-3xl font-bold mb-1">80.3%</div>
+            <div class="text-sm text-gray-400">Promedio Nacional</div>
+            <div class="mt-3 h-2 bg-gray-700 rounded-full">
+                <div class="h-2 gradient-magenta rounded-full" style="width: 80.3%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Test Panel -->
+    <div class="surface m-4 p-6">
+        <h2 class="text-xl font-semibold mb-4">Prueba de API Backend</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- API Endpoints -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium">Endpoints Disponibles</h3>
+                
+                <button onclick="testEndpoint('/')" class="w-full p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                    GET / - Información API
+                </button>
+                
+                <button onclick="testEndpoint('/health')" class="w-full p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                    GET /health - Estado del servidor
+                </button>
+                
+                <button onclick="testEndpoint('/docs')" class="w-full p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors">
+                    GET /docs - Documentación OpenAPI
+                </button>
+                
+                <!-- Simular llamadas a endpoints complejos -->
+                <button onclick="simulateComplexEndpoints()" class="w-full p-3 bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors">
+                    Simular Endpoints DIA (colegios, resultados, etc.)
+                </button>
+            </div>
+            
+            <!-- Response Display -->
+            <div>
+                <h3 class="text-lg font-medium mb-2">Respuesta API</h3>
+                <div class="surface p-4 h-64 overflow-y-auto">
+                    <pre id="apiResponse" class="text-sm text-green-400 whitespace-pre-wrap">Selecciona un endpoint para ver la respuesta...</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Demo -->
+    <div class="surface m-4 p-6">
+        <h2 class="text-xl font-semibold mb-4">Características Implementadas</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="space-y-3">
+                <h3 class="text-lg font-medium text-orange-400">🎨 Frontend</h3>
+                <ul class="space-y-1 text-sm text-gray-300">
+                    <li>✅ React + Vite + TypeScript</li>
+                    <li>✅ Paleta neon-city exacta</li>
+                    <li>✅ Componentes UI (KPICard, Charts)</li>
+                    <li>✅ TailwindCSS personalizado</li>
+                    <li>✅ Responsive design</li>
+                </ul>
+            </div>
+            
+            <div class="space-y-3">
+                <h3 class="text-lg font-medium text-magenta-400">🔧 Backend</h3>
+                <ul class="space-y-1 text-sm text-gray-300">
+                    <li>✅ FastAPI + SQLAlchemy</li>
+                    <li>✅ 8 routers API implementados</li>
+                    <li>✅ Modelos PostgreSQL DIA</li>
+                    <li>✅ Endpoints CRUD completos</li>
+                    <li>✅ Documentación OpenAPI</li>
+                </ul>
+            </div>
+            
+            <div class="space-y-3">
+                <h3 class="text-lg font-medium text-cyan-400">🤖 IA & Análisis</h3>
+                <ul class="space-y-1 text-sm text-gray-300">
+                    <li>✅ Proyecciones Prophet</li>
+                    <li>✅ NLQ (consultas naturales)</li>
+                    <li>✅ Alertas predictivas</li>
+                    <li>✅ Comparativas multinivel</li>
+                    <li>✅ Análisis de tendencias</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="surface m-4 p-4 text-center text-gray-400">
+        <p>DIA Dashboard v1.0.0 - Sistema de Análisis Educativo Regional</p>
+        <p class="text-sm mt-2">
+            Backend: <span id="backendStatus">🔄 Verificando...</span> | 
+            Construido con ❤️ para mejorar la educación en Chile 🇨🇱
+        </p>
+    </footer>
+
+    <script>
+        // API Base URL
+        const API_BASE = 'http://localhost:8000';
+        
+        // Check API status on load
+        window.addEventListener('load', checkApiStatus);
+        
+        async function checkApiStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('apiStatus').className = 'api-status connected';
+                    document.getElementById('apiStatusText').textContent = 'API Conectada';
+                    document.getElementById('backendStatus').textContent = '✅ Online';
+                } else {
+                    throw new Error('API Error');
+                }
+            } catch (error) {
+                document.getElementById('apiStatus').className = 'api-status disconnected';
+                document.getElementById('apiStatusText').textContent = 'API Desconectada';
+                document.getElementById('backendStatus').textContent = '❌ Offline';
+            }
+        }
+        
+        async function testEndpoint(endpoint) {
+            const responseElement = document.getElementById('apiResponse');
+            responseElement.textContent = 'Cargando...';
+            
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                const data = await response.json();
+                
+                responseElement.textContent = JSON.stringify(data, null, 2);
+                responseElement.className = 'text-sm text-green-400 whitespace-pre-wrap';
+            } catch (error) {
+                responseElement.textContent = `Error: ${error.message}`;
+                responseElement.className = 'text-sm text-red-400 whitespace-pre-wrap';
+            }
+        }
+        
+        function simulateComplexEndpoints() {
+            const responseElement = document.getElementById('apiResponse');
+            
+            const mockResponse = {
+                "mensaje": "Endpoints DIA implementados (simulado)",
+                "endpoints_disponibles": [
+                    "GET /api/v1/colegios - Listar colegios",
+                    "GET /api/v1/colegios/search - Búsqueda typeahead",
+                    "GET /api/v1/dimensiones - Dimensiones DIA 1-7",
+                    "GET /api/v1/resultados - Resultados con filtros",
+                    "GET /api/v1/comparativas/colegio - Comparar niveles",
+                    "GET /api/v1/proyecciones/tendencia - Proyecciones IA",
+                    "POST /api/v1/nlq/consulta - Consultas naturales",
+                    "POST /api/v1/ingesta/cargar-resultados - Carga CSV"
+                ],
+                "estructura_dia": {
+                    "dimensiones": 7,
+                    "preguntas": 38,
+                    "metricas": ["RF%", "RNF%", "Nulo-NC%"],
+                    "niveles": ["Colegio", "Comuna", "Región", "Nacional"]
+                },
+                "ia_features": {
+                    "prophet_proyecciones": true,
+                    "nlq_espanol": true,
+                    "alertas_predictivas": true,
+                    "analisis_comparativo": true
+                },
+                "nota": "Esta es una simulación. Los endpoints reales están implementados en el backend FastAPI."
+            };
+            
+            responseElement.textContent = JSON.stringify(mockResponse, null, 2);
+            responseElement.className = 'text-sm text-blue-400 whitespace-pre-wrap';
+        }
+        
+        // Auto-refresh API status every 10 seconds
+        setInterval(checkApiStatus, 10000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "dia-educativo-dashboard",
+  "version": "1.0.0",
+  "description": "Aplicación web para análisis educativo regional basada en cuestionario socioemocional DIA",
+  "private": true,
+  "scripts": {
+    "start": "python serve_demo.py",
+    "dev:backend": "cd apps/backend && python main.py",
+    "dev:frontend": "cd apps/frontend && python -m http.server 5173",
+    "install:backend": "cd apps/backend && pip install -r requirements.txt"
+  },
+  "engines": {
+    "python": ">=3.8.0"
+  },
+  "author": "Equipo DIA Educativo",
+  "license": "MIT",
+  "keywords": [
+    "educacion",
+    "dashboard",
+    "analytics",
+    "socioemocional",
+    "aysen"
+  ]
+}
